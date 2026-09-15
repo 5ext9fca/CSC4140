@@ -1,3 +1,0 @@
-/home/hx/CSC4140/ass1/build/CMakeFiles/demo.dir
-/home/hx/CSC4140/ass1/build/CMakeFiles/edit_cache.dir
-/home/hx/CSC4140/ass1/build/CMakeFiles/rebuild_cache.dir
