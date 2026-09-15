@@ -1,0 +1,32 @@
+2.1 Basic vector operations: 
+v + w: 
+  1
+2.5
+  4
+  7
+v dot w: 
+17.5
+2.2 Basic matrix operations: 
+i + j: 
+ 5  5  5  5
+13 13 13 13
+21 21 21 21
+29 29 29 29
+i * j: 
+120 110 100  90
+280 254 228 202
+440 398 356 314
+600 542 484 426
+i * v: 
+ 22
+ 52
+ 82
+112
+2.3 SVD decomposition of "lenna":
+reconstructed_1.png written
+reconstructed_10.png written
+reconstructed_50.png written
+2.4 Rotated Point: 
+  1.6403
+0.912883
+ 3.82577

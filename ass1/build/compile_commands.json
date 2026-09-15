@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/graphics/Desktop/CSC4140/ass1/build",
+  "command": "/usr/bin/g++   -isystem /usr/include/opencv4  -g   -std=gnu++17 -o CMakeFiles/demo.dir/main.cpp.o -c /home/graphics/Desktop/CSC4140/ass1/main.cpp",
+  "file": "/home/graphics/Desktop/CSC4140/ass1/main.cpp"
+}
+]

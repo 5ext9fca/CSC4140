@@ -1,0 +1,3 @@
+/home/graphics/Desktop/CSC4140/ass1/build/CMakeFiles/rebuild_cache.dir
+/home/graphics/Desktop/CSC4140/ass1/build/CMakeFiles/edit_cache.dir
+/home/graphics/Desktop/CSC4140/ass1/build/CMakeFiles/demo.dir
