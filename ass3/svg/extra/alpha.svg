@@ -1,0 +1,10 @@
+<svg width="400" height="300">
+  <!-- Opacity extra credit: draw triangle A over triangle B, both with an alpha
+       channel, using the z-buffer.  B (blue, opaque) is drawn first, then A (red,
+       alpha = 0.5) at the SAME z, so the z-buffer's equal-depth rule lets A blend
+       over B (paint order).  Both carry an alpha component in `colors` (r g b a). -->
+  <colortri points="140 260 300 260 220 70" zs="0.3 0.3 0.3"
+            colors="0 0 1 1  0 0 1 1  0 0 1 1"/>
+  <colortri points="100 260 240 260 170 100" zs="0.3 0.3 0.3"
+            colors="1 0 0 0.5  1 0 0 0.5  1 0 0 0.5"/>
+</svg>

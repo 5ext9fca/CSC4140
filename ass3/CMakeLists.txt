@@ -1,0 +1,91 @@
+cmake_minimum_required(VERSION 3.8)
+project(Assignment3)
+
+#-------------------------------------------------------------------------------
+# Build options
+#-------------------------------------------------------------------------------
+option(BUILD_DEBUG     "Build with debug settings"    OFF)
+option(BUILD_DOCS      "Build documentation"          OFF)
+option(BUILD_CUSTOM    "Build without reference"      OFF)
+
+set(BUILD_DEBUG ${BUILD_DEBUG} CACHE BOOL "Build debug" FORCE)
+
+if (BUILD_DEBUG)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+#-------------------------------------------------------------------------------
+# Set target
+#-------------------------------------------------------------------------------
+set(APPLICATION_SOURCE
+    
+    src/texture.cpp
+    src/triangulation.cpp
+    src/svgparser.cpp
+    src/transforms.cpp
+    src/rasterizer.cpp
+    src/utils.cpp
+    src/drawrend.cpp
+    src/svg.cpp
+    src/main.cpp
+    # Add headers for the sake of Xcode/Visual Studio projects
+    src/rasterizer.h
+    src/utils.h
+    src/drawrend.h
+    src/svg.h
+    src/svgparser.h
+    src/texture.h
+    src/transforms.h
+    src/triangulation.h
+)
+
+if (WIN32)
+    include_directories(src/dirent)
+    list(APPEND APPLICATION_SOURCE src/dirent/dirent.c)
+endif(WIN32)
+
+add_executable(draw ${APPLICATION_SOURCE})
+
+target_include_directories(draw PUBLIC src)
+
+# Rasterizer uses C++17 features (std::execution::par, structured bindings),
+# while CGL forces -std=c++11 globally. Override for the draw target only.
+set_target_properties(draw PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF)
+
+set(CGL_INCLUDE_DIRS CGL/include CGL/deps/glew/include CGL/deps/glfw/include)
+
+#-------------------------------------------------------------------------------
+# Find dependencies
+#-------------------------------------------------------------------------------
+add_subdirectory(CGL)
+target_include_directories(draw PUBLIC ${CGL_INCLUDE_DIRS})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CGL_CXX_FLAGS}")
+
+set(OpenGL_GL_PREFERENCE LEGACY)
+find_package(OpenGL REQUIRED)
+target_link_libraries(draw PUBLIC OpenGL::GL)
+target_link_libraries(draw PUBLIC OpenGL::GLU)
+
+# Intel TBB backend required by the parallel algorithms (std::execution::par)
+find_package(TBB REQUIRED)
+target_link_libraries(draw PRIVATE TBB::tbb)
+
+target_link_libraries(draw PRIVATE CGL)
+
+#-------------------------------------------------------------------------------
+# Add subdirectories
+#-------------------------------------------------------------------------------
+
+# build documentation
+if(BUILD_DOCS)
+  find_package(DOXYGEN)
+  if(DOXYGEN_FOUND AND BUILD_DOCS)
+    add_subdirectory(docs)
+  endif()
+endif()
+
+# Install settings
+set(CMAKE_INSTALL_PREFIX "${Assignment3_SOURCE_DIR}/")

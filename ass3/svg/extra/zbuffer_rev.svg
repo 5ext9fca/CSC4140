@@ -1,0 +1,6 @@
+<svg width="400" height="300">
+  <!-- Same scene as zbuffer.svg with draw order swapped.
+       The rendered image must be IDENTICAL to zbuffer.svg (order independence). -->
+  <polygon points="120,240 260,240 190,80" fill="#0000ff" z="0.8"/>
+  <polygon points="60,240 200,240 130,80"  fill="#ff0000" z="0.2"/>
+</svg>

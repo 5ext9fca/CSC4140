@@ -1,0 +1,7 @@
+<svg width="400" height="300">
+  <!-- Z-buffer demo: NEAR triangle drawn FIRST, FAR triangle drawn LAST.
+       With the z-buffer, the near red triangle must stay visible in the
+       overlap even though the far blue triangle is drawn after it. -->
+  <polygon points="60,240 200,240 130,80"  fill="#ff0000" z="0.2"/>
+  <polygon points="120,240 260,240 190,80" fill="#0000ff" z="0.8"/>
+</svg>
