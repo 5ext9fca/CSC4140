@@ -6,7 +6,7 @@
 
 | 路径 | 内容 |
 |---|---|
-| `Env/` | 学期级跨平台开发环境（`.devcontainer/Dockerfile` + `devcontainer.json`，依赖的唯一事实来源） |
+| `.devcontainer/` | 学期级跨平台开发环境（`Dockerfile` + `devcontainer.json`，依赖的唯一事实来源） |
 | `AGENTS.md` | 面向 AI 编码代理的仓库约定（环境事实、构建、Git） |
 | `ass1/` | 作业一：向量 / 矩阵基础与图像重建 |
 | `ass2/` | 作业二：光栅化渲染 |
@@ -27,7 +27,7 @@
 
 ### 使用
 
-1. 用 VS Code 打开 `Env/` 目录（devcontainer 配置所在处）
+1. 用 VS Code 打开本仓库根目录（devcontainer 配置所在处）
 2. `Ctrl+Shift+P` → **Dev Containers: Reopen in Container**（首次自动构建镜像，约数分钟）
 3. 容器启动后 `postCreateCommand` 会校验全部依赖，输出「依赖完整性检查通过」即就绪
 
@@ -35,7 +35,7 @@
 
 | 容器路径 | 内容 |
 |---|---|
-| `/workspaces/CSC4140/Env` | 开发环境（默认工作区） |
+| `/workspaces/CSC4140` | 仓库根目录（默认工作区） |
 | `/workspaces/CSC4140/ass1 …` | 各次作业，可在容器内直接打开 |
 
 在容器内编译运行作业，例如：
@@ -54,6 +54,7 @@ cmake --build /workspaces/CSC4140/ass3/build
 | macOS | 需安装并启动 XQuartz |
 | 无显示器的服务器 | 删除 `devcontainer.json` 中的 X11 挂载与 `DISPLAY` 两项 |
 
+- 容器内报 `X11: Failed to open display` / `could not initialize GLFW!` 时，先查容器内 `echo $DISPLAY`：为空说明宿主环境变量没传进来（`${localEnv:DISPLAY}` 会回退为 `:0`，临时也可 `DISPLAY=:0 ./build/draw ...`）
 - 默认软件渲染（Mesa llvmpipe），任何宿主均可运行
 - 需要 GPU 硬件加速时，取消 `devcontainer.json` 中 `runArgs` 里 `--device=/dev/dri` 的注释后 Rebuild
 
@@ -63,7 +64,7 @@ cmake --build /workspaces/CSC4140/ass3/build
 
 - 改回 Debian 官方源：将 `devcontainer.json` 中 `"MIRROR"` 置为 `""` 后 Rebuild
 - 换用其他镜像：改为对应地址（如 `https://mirrors.tuna.tsinghua.edu.cn`）后 Rebuild
-- 手动构建：`docker build --build-arg MIRROR= -t csc4140-env Env/.devcontainer`
+- 手动构建：`docker build --build-arg MIRROR= -t csc4140-env .devcontainer`
 
 ## 依赖清单（27 个包）
 
@@ -85,4 +86,4 @@ cmake --build /workspaces/CSC4140/ass3/build
 
 ## 与其他部署方式的关系
 
-`Env/.devcontainer` 为学期内主开发环境（唯一事实来源）；根目录的 `install_dependencies.sh` 保留为无 Docker 场景下裸机 Linux/WSL2 的兜底安装脚本，二者与 `devcontainer.json` 中 `postCreateCommand` 的校验清单保持同步。
+根目录的 `.devcontainer` 为学期内主开发环境（唯一事实来源）；同目录的 `install_dependencies.sh` 保留为无 Docker 场景下裸机 Linux/WSL2 的兜底安装脚本，二者与 `devcontainer.json` 中 `postCreateCommand` 的校验清单保持同步。

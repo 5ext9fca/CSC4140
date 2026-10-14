@@ -5,7 +5,7 @@
 ## 仓库定位
 
 - 本仓库为 CSC4140 课程总仓，包含学期开发环境与各次作业实现。
-- `Env/` 只存放学期环境配置（`Env/.devcontainer/Dockerfile`、`Env/.devcontainer/devcontainer.json`），不要往这里添加作业代码或构建产物。
+- 仓库根的 `.devcontainer/` 只存放学期环境配置（`Dockerfile`、`devcontainer.json`），不要往这里添加作业代码或构建产物。
 - 各次作业位于 `ass1/`、`ass2/`、`ass3/`，容器内统一挂载在 `/workspaces/CSC4140/`（如 `/workspaces/CSC4140/ass3`），共用本环境。
 - 作业目录只保留源码、构建配置与运行结果，**不含报告**（报告已移除，勿再提交 `REPORT.md`、`Report.pdf` 等）。
 
@@ -13,13 +13,13 @@
 
 - 基础镜像 `mcr.microsoft.com/devcontainers/cpp:1-debian-12`（Debian 12 bookworm），默认用户为非 root 的 `vscode`。
 - 学期全部 27 个依赖已在镜像构建时装好。**不要**重复 `apt install` 已有依赖，也**不要**在运行中的容器里临时装包来"解决"问题——容器可随时重建，运行期改动会丢失。
-- 依赖的单一事实来源是 `Env/.devcontainer/Dockerfile`。
+- 依赖的单一事实来源是 `.devcontainer/Dockerfile`。
 - apt 镜像源（USTC）在构建期经 `MIRROR` build arg 固化，**不要**在运行时修改 `/etc/apt/sources.list`。
 
 ## 修改依赖时
 
-- 只改 `Env/.devcontainer/Dockerfile`，改完需 Rebuild Container 才生效；直接在容器里 `apt install` 是错误做法。
-- `Env/.devcontainer/devcontainer.json` 中 `postCreateCommand` 的 `dpkg -s` 校验列表必须与 `Dockerfile` 安装列表保持同步，改一处必须改另一处。
+- 只改 `.devcontainer/Dockerfile`，改完需 Rebuild Container 才生效；直接在容器里 `apt install` 是错误做法。
+- `.devcontainer/devcontainer.json` 中 `postCreateCommand` 的 `dpkg -s` 校验列表必须与 `Dockerfile` 安装列表保持同步，改一处必须改另一处。
 - 根目录的 `install_dependencies.sh` 是无 Docker 场景的裸机兜底脚本，依赖变更需三处同步。
 - 原则：**所有依赖项均不多余**。新增包前先确认作业确实引用（查作业的 `CMakeLists.txt` 与源码 `#include`），删除前同样确认无引用。
 

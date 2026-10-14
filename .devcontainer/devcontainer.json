@@ -12,14 +12,16 @@
   },
 
   // 将整个 CSC4140 课程目录挂入容器，学期内所有作业共用此环境
-  "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces/CSC4140,type=bind",
-  "workspaceFolder": "/workspaces/CSC4140/Env",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/CSC4140,type=bind",
+  "workspaceFolder": "/workspaces/CSC4140",
 
   // OpenGL 窗口显示:
   //   WSL2(WSLg) 开箱即用; Linux X11/Wayland 宿主若无法弹窗, 先在宿主执行 xhost +local:
   //   macOS 需安装并启动 XQuartz; 纯编译无显示器的场景可删除下面两项
   "containerEnv": {
-    "DISPLAY": "${localEnv:DISPLAY}"
+    // ${localEnv:DISPLAY} 取宿主环境变量; 若宿主(如 Windows 侧 VS Code)未定义 DISPLAY,
+    // 则回退为 :0 (WSLg / Linux X11 的默认显示号), 避免容器内 DISPLAY 为空导致 GLFW 打不开窗口
+    "DISPLAY": "${localEnv:DISPLAY::0}"
   },
   "mounts": [
     "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
