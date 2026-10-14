@@ -7,6 +7,7 @@
 | 路径 | 内容 |
 |---|---|
 | `Env/` | 学期级跨平台开发环境（`.devcontainer/Dockerfile` + `devcontainer.json`，依赖的唯一事实来源） |
+| `AGENTS.md` | 面向 AI 编码代理的仓库约定（环境事实、构建、Git） |
 | `ass1/` | 作业一：向量 / 矩阵基础与图像重建 |
 | `ass2/` | 作业二：光栅化渲染 |
 | `ass3/` | 作业三：SVG 光栅化渲染器 |

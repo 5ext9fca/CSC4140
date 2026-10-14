@@ -32,8 +32,7 @@ in the project root:
 | `result2.png` | `config/config2.json` | 0 degrees |
 | `result3.png` | `config/config3.json` | 0 degrees |
 
-Copies of the verified images used by the report are stored in `report/` and are not modified
-by the script.
+These images are written into the project root by the script on each run.
 
 ## Manual Build
 

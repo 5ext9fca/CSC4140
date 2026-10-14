@@ -1,5 +1,5 @@
 # CSC4140 学期开发环境（方案一：DevContainer / Docker —— 单一事实来源）
-# 依赖来源: Ass3 的 Dependencies.png 与 main.pdf，覆盖学期内所有作业
+# 依赖来源: 仓库根目录 Dependencies.png 与作业说明，覆盖学期内所有作业
 # 镜像源: 默认中国镜像 (USTC)，构建时可用 --build-arg MIRROR= 置空恢复官方源
 FROM mcr.microsoft.com/devcontainers/cpp:1-debian-12
 
