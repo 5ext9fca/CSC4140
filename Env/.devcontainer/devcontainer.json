@@ -1,0 +1,43 @@
+{
+  // CSC4140 学期开发环境 —— 方案一：DevContainer / Docker（单一事实来源）
+  // 宿主只需: Docker(Desktop) + VS Code + Dev Containers 扩展
+  // 用法: VS Code 打开本仓库 → Ctrl+Shift+P → "Dev Containers: Reopen in Container"
+  "name": "CSC4140 Env",
+  "build": {
+    "dockerfile": "Dockerfile",
+    // 默认走中国镜像 (USTC)；置为 "" 可改回 Debian 官方源
+    "args": {
+      "MIRROR": "https://mirrors.ustc.edu.cn"
+    }
+  },
+
+  // 将整个 CSC4140 课程目录挂入容器，学期内所有作业共用此环境
+  "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces/CSC4140,type=bind",
+  "workspaceFolder": "/workspaces/CSC4140/Env",
+
+  // OpenGL 窗口显示:
+  //   WSL2(WSLg) 开箱即用; Linux X11/Wayland 宿主若无法弹窗, 先在宿主执行 xhost +local:
+  //   macOS 需安装并启动 XQuartz; 纯编译无显示器的场景可删除下面两项
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}"
+  },
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
+  ],
+  "runArgs": [
+    "--ipc=host"
+    // GPU 直通（宿主存在 /dev/dri 时取消注释, 获得硬件加速 GL）:
+    // ,"--device=/dev/dri"
+  ],
+
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools"
+      ]
+    }
+  },
+  "postCreateCommand": "dpkg -s g++ build-essential cmake pkg-config libeigen3-dev libtiff-dev libjpeg-dev libpng-dev libgif-dev libopenexr-dev libraw1394-dev libopencv-dev libtbb-dev hwloc libibverbs-dev rdma-core libasound2-dev libavcodec-dev libavformat-dev libswscale-dev libx11-dev libxext-dev freeglut3-dev mesa-common-dev libfreetype6-dev xorg-dev libgl1-mesa-dev >/dev/null && echo '依赖完整性检查通过'"
+}
