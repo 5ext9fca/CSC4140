@@ -66,11 +66,11 @@ cmake --build /workspaces/CSC4140/ass3/build
 - 换用其他镜像：改为对应地址（如 `https://mirrors.tuna.tsinghua.edu.cn`）后 Rebuild
 - 手动构建：`docker build --build-arg MIRROR= -t csc4140-env .devcontainer`
 
-## 依赖清单（27 个包）
+## 依赖清单（28 个包）
 
 | 分组 | 包 |
 |---|---|
-| 工具链 | `g++` `build-essential` `cmake` `pkg-config` |
+| 工具链 | `g++` `build-essential` `cmake` `ninja-build` `pkg-config` |
 | 线性代数 | `libeigen3-dev` |
 | 图像格式 | `libtiff-dev` `libjpeg-dev` `libpng-dev` `libgif-dev` |
 | HDR 图像 | `libopenexr-dev` |

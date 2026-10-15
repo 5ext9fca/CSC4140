@@ -50,7 +50,7 @@ $SUDO apt "${APT_MIRROR_OPTS[@]}" upgrade -y
 $SUDO apt "${APT_MIRROR_OPTS[@]}" install -y g++
 
 $SUDO apt "${APT_MIRROR_OPTS[@]}" install -y \
-    build-essential cmake pkg-config \
+    build-essential cmake ninja-build pkg-config \
     libeigen3-dev libtiff-dev libjpeg-dev libpng-dev libgif-dev \
     libopenexr-dev libraw1394-dev \
     libopencv-dev libtbb-dev hwloc libibverbs-dev rdma-core \

@@ -42,5 +42,5 @@
       ]
     }
   },
-  "postCreateCommand": "dpkg -s g++ build-essential cmake pkg-config libeigen3-dev libtiff-dev libjpeg-dev libpng-dev libgif-dev libopenexr-dev libraw1394-dev libopencv-dev libtbb-dev hwloc libibverbs-dev rdma-core libasound2-dev libavcodec-dev libavformat-dev libswscale-dev libx11-dev libxext-dev freeglut3-dev mesa-common-dev libfreetype6-dev xorg-dev libgl1-mesa-dev >/dev/null && echo '依赖完整性检查通过'"
+  "postCreateCommand": "dpkg -s g++ build-essential cmake ninja-build pkg-config libeigen3-dev libtiff-dev libjpeg-dev libpng-dev libgif-dev libopenexr-dev libraw1394-dev libopencv-dev libtbb-dev hwloc libibverbs-dev rdma-core libasound2-dev libavcodec-dev libavformat-dev libswscale-dev libx11-dev libxext-dev freeglut3-dev mesa-common-dev libfreetype6-dev xorg-dev libgl1-mesa-dev >/dev/null && echo '依赖完整性检查通过'"
 }

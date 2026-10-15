@@ -20,7 +20,7 @@ RUN set -eux; \
     apt-get -y upgrade; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         g++ \
-        build-essential cmake pkg-config \
+        build-essential cmake ninja-build pkg-config \
         libeigen3-dev libtiff-dev libjpeg-dev libpng-dev libgif-dev \
         libopenexr-dev libraw1394-dev \
         libopencv-dev libtbb-dev hwloc libibverbs-dev rdma-core \

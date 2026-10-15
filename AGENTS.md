@@ -12,7 +12,7 @@
 ## 环境事实（容器内）
 
 - 基础镜像 `mcr.microsoft.com/devcontainers/cpp:1-debian-12`（Debian 12 bookworm），默认用户为非 root 的 `vscode`。
-- 学期全部 27 个依赖已在镜像构建时装好。**不要**重复 `apt install` 已有依赖，也**不要**在运行中的容器里临时装包来"解决"问题——容器可随时重建，运行期改动会丢失。
+- 学期全部 28 个依赖已在镜像构建时装好。**不要**重复 `apt install` 已有依赖，也**不要**在运行中的容器里临时装包来"解决"问题——容器可随时重建，运行期改动会丢失。
 - 依赖的单一事实来源是 `.devcontainer/Dockerfile`。
 - apt 镜像源（USTC）在构建期经 `MIRROR` build arg 固化，**不要**在运行时修改 `/etc/apt/sources.list`。
 
