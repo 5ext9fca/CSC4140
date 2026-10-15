@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 无人值守安装 Assignment03 依赖项 (Ubuntu/Debian)
-# 依赖来源: Dependencies.png 与 main.pdf
+# 无人值守安装 CSC4140 学期全部作业的依赖项 (Ubuntu/Debian)
+# 依赖来源: Dependencies.png，清单与 .devcontainer/Dockerfile 保持同步（单一事实来源）
 # 默认通过中国镜像 (USTC) 下载，仅本次运行生效，不修改任何系统配置
 # 可用环境变量覆盖: MIRROR=... ./install_dependencies.sh
 set -euo pipefail
