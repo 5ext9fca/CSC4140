@@ -18,10 +18,11 @@
 
 ## 开发环境（DevContainer / Docker）
 
-用一份 `Dockerfile` 固化学期内全部作业的 Linux 依赖，在 Windows / macOS / Linux 宿主上通过 VS Code Dev Containers 复现同一环境，彻底解决 `libraw1394-dev`、`rdma-core`、ALSA/X11 等 Linux 专属依赖的跨平台问题。
+用一份 `Dockerfile` 固化学期内全部作业的 Linux 依赖，在 Windows（WSL2） / Linux 宿主上通过 VS Code Dev Containers 复现同一环境，彻底解决 `libraw1394-dev`、`rdma-core`、ALSA/X11 等 Linux 专属依赖的跨平台问题。
 
 ### 宿主要求
 
+- 宿主系统：Windows（WSL2）或 Linux —— 其他宿主不在支持范围内
 - Docker（Linux/WSL2 内原生安装，或 Docker Desktop）
 - VS Code + [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) 扩展
 
@@ -51,11 +52,10 @@ cmake --build /workspaces/CSC4140/ass3/build
 |---|---|
 | Windows WSL2（WSLg） | 开箱即用 |
 | Linux X11/Wayland | 若无法弹窗，先在宿主执行 `xhost +local:` |
-| macOS | 需安装并启动 XQuartz |
 | 无显示器的服务器 | 删除 `devcontainer.json` 中的 X11 挂载与 `DISPLAY` 两项 |
 
-- 容器内报 `X11: Failed to open display` / `could not initialize GLFW!` 时，先查容器内 `echo $DISPLAY`：为空说明宿主环境变量没传进来（`${localEnv:DISPLAY}` 会回退为 `:0`，临时也可 `DISPLAY=:0 ./build/draw ...`）
-- 默认软件渲染（Mesa llvmpipe），任何宿主均可运行
+- 容器内报 `X11: Failed to open display` / `could not initialize GLFW!` 时，先查容器内 `echo $DISPLAY`：为空说明宿主环境变量没传进来（`containerEnv` 里的 `${localEnv:DISPLAY}` 只做透传、不设回退值，临时可在宿主 `export DISPLAY=:0` 后重开容器，或在容器内临时 `DISPLAY=:0 ./build/draw ...`）
+- 默认软件渲染（Mesa llvmpipe），受支持的宿主均可运行
 - 需要 GPU 硬件加速时，取消 `devcontainer.json` 中 `runArgs` 里 `--device=/dev/dri` 的注释后 Rebuild
 
 ## 镜像源

@@ -15,13 +15,14 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/CSC4140,type=bind",
   "workspaceFolder": "/workspaces/CSC4140",
 
-  // OpenGL 窗口显示:
+  // OpenGL 窗口显示（WSL2 / Linux 宿主）:
   //   WSL2(WSLg) 开箱即用; Linux X11/Wayland 宿主若无法弹窗, 先在宿主执行 xhost +local:
-  //   macOS 需安装并启动 XQuartz; 纯编译无显示器的场景可删除下面两项
+  //   纯编译无显示器的场景可删除下面两项
   "containerEnv": {
-    // ${localEnv:DISPLAY} 取宿主环境变量; 若宿主(如 Windows 侧 VS Code)未定义 DISPLAY,
-    // 则回退为 :0 (WSLg / Linux X11 的默认显示号), 避免容器内 DISPLAY 为空导致 GLFW 打不开窗口
-    "DISPLAY": "${localEnv:DISPLAY::0}"
+    // 透传宿主的 DISPLAY: WSLg 与 Linux X11/Wayland 都会在宿主设置它, 为空则交由 GLFW 报错。
+    // 注意: ${localEnv:VAR:default} 以 ":" 作分隔符, 写不出 ":0" 这种带冒号的回退值
+    // (旧写法 ${localEnv:DISPLAY::0} 会被解析成空串, 回退从未生效), 故不再设回退。
+    "DISPLAY": "${localEnv:DISPLAY}"
   },
   "mounts": [
     "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
