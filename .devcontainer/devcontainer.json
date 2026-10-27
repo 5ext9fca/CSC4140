@@ -42,5 +42,10 @@
       ]
     }
   },
-  "postCreateCommand": "dpkg -s g++ build-essential cmake ninja-build pkg-config libeigen3-dev libtiff-dev libjpeg-dev libpng-dev libgif-dev libopenexr-dev libraw1394-dev libopencv-dev libtbb-dev hwloc libibverbs-dev rdma-core libasound2-dev libavcodec-dev libavformat-dev libswscale-dev libx11-dev libxext-dev freeglut3-dev mesa-common-dev libfreetype6-dev xorg-dev libgl1-mesa-dev >/dev/null && echo '依赖完整性检查通过'"
+  "postCreateCommand": "dpkg -s g++ build-essential cmake ninja-build pkg-config libeigen3-dev libtiff-dev libjpeg-dev libpng-dev libgif-dev libopenexr-dev libraw1394-dev libopencv-dev libtbb-dev hwloc libibverbs-dev rdma-core libasound2-dev libavcodec-dev libavformat-dev libswscale-dev libx11-dev libxext-dev freeglut3-dev mesa-common-dev libfreetype6-dev xorg-dev libgl1-mesa-dev >/dev/null && echo '依赖完整性检查通过'",
+
+  // 透传的 DISPLAY 为空时（VS Code 客户端环境没有 DISPLAY），按挂载进来的
+  // X11 socket 回退到 :0，避免容器里的 OpenGL 程序报 "X11: Failed to open display"。
+  // 回退只写入 ~/.bashrc，已打开的终端需新建终端或手动 source ~/.bashrc。
+  "postStartCommand": "bash /workspaces/CSC4140/.devcontainer/post-start.sh"
 }

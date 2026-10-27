@@ -54,7 +54,9 @@ cmake --build /workspaces/CSC4140/ass3/build
 | Linux X11/Wayland | 若无法弹窗，先在宿主执行 `xhost +local:` |
 | 无显示器的服务器 | 删除 `devcontainer.json` 中的 X11 挂载与 `DISPLAY` 两项 |
 
-- 容器内报 `X11: Failed to open display` / `could not initialize GLFW!` 时，先查容器内 `echo $DISPLAY`：为空说明宿主环境变量没传进来（`containerEnv` 里的 `${localEnv:DISPLAY}` 只做透传、不设回退值，临时可在宿主 `export DISPLAY=:0` 后重开容器，或在容器内临时 `DISPLAY=:0 ./build/draw ...`）
+- 容器内报 `X11: Failed to open display` / `could not initialize GLFW!` 时，先查容器内 `echo $DISPLAY`：
+  - 为空：说明宿主环境变量没传进来（`containerEnv` 里的 `${localEnv:DISPLAY}` 只做透传、不设回退值）。容器启动时 `.devcontainer/post-start.sh` 会在 `/tmp/.X11-unix/X0` 存在的前提下把 `export DISPLAY=:0` 写入 `~/.bashrc`；**已打开的终端需新建终端**（或 `source ~/.bashrc`）才生效
+  - 仍失败：确认 `devcontainer.json` 的 X11 挂载生效（容器内 `ls /tmp/.X11-unix`）、Linux 宿主已执行 `xhost +local:`，或临时用 `DISPLAY=:0 ./build/draw ...` 验证
 - 默认软件渲染（Mesa llvmpipe），受支持的宿主均可运行
 - 需要 GPU 硬件加速时，取消 `devcontainer.json` 中 `runArgs` 里 `--device=/dev/dri` 的注释后 Rebuild
 

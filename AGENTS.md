@@ -36,6 +36,7 @@
 ## 图形 / GPU
 
 - OpenGL 程序依赖 `DISPLAY` 环境变量与 `/tmp/.X11-unix` 挂载；WSL2（WSLg）下开箱即用。
+- `DISPLAY` 透传为空时，`.devcontainer/post-start.sh` 会在 `/tmp/.X11-unix/X0` 存在的前提下把回退 `export DISPLAY=:0` 写入 `~/.bashrc`（仅新终端生效）；排查显示问题先看 `echo $DISPLAY` 与 socket 是否存在，不要猜测缺包并安装。
 - GL 窗口打不开时，先排查 `DISPLAY` 与 X11 挂载，不要猜测缺包并安装。
 - GPU 直通默认关闭（`runArgs` 中 `--device=/dev/dri` 已注释），默认软件渲染（llvmpipe）是保底路径。
 
