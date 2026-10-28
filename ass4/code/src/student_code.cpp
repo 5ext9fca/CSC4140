@@ -12,6 +12,18 @@ namespace CGL
     return (1.0-f)*a + f*b;
   }
 
+  ButterflyWeightFunction classicButterflyWeights()
+  {
+    return []( int ring ) -> double {
+      switch (ring) {
+        case 0: return 0.5;        // edge endpoints
+        case 1: return 1.0 / 8.0;  // vertices opposite the edge
+        case 2: return -1.0 / 16.0; // outer "wing" vertices
+        default: return 0.0;
+      }
+    };
+  }
+
   /**
    * Evaluates one step of the de Casteljau's algorithm using the given points and
    * the scalar parameter t (class member).
@@ -491,6 +503,89 @@ namespace CGL
       if (v0->isNew != v1->isNew) {
         mesh.flipEdge(edge);
       }
+    }
+  }
+
+  // Returns the third vertex of the triangle on the other side of the edge
+  // containing h, or verticesEnd() if that side is a boundary loop.
+  static VertexIter vertexAcrossEdge( HalfedgeIter h, HalfedgeMesh& mesh )
+  {
+    HalfedgeIter twin = h->twin();
+    if (twin->isBoundary()) {
+      return mesh.verticesEnd();
+    }
+    return twin->next()->next()->vertex();
+  }
+
+  void computeButterflyOriginalVertexPositions( HalfedgeMesh& mesh )
+  {
+    // Butterfly is an interpolating scheme: the original vertices do not move.
+    for (VertexIter vertex = mesh.verticesBegin(); vertex != mesh.verticesEnd(); vertex++) {
+      vertex->newPosition = vertex->position;
+      vertex->isNew = false;
+    }
+  }
+
+  void computeButterflyEdgePositions( HalfedgeMesh& mesh,
+                                      const ButterflyWeightFunction& weights )
+  {
+    const double w0 = weights(0);
+    const double w1 = weights(1);
+    const double w2 = weights(2);
+
+    for (EdgeIter edge = mesh.edgesBegin(); edge != mesh.edgesEnd(); edge++) {
+      HalfedgeIter h0 = edge->halfedge();
+      HalfedgeIter h1 = h0->twin();
+      VertexIter a = h0->vertex();
+      VertexIter b = h1->vertex();
+
+      // Boundary edges keep the same (A+B)/2 rule used by the boundary
+      // extension of Loop subdivision; keeping the old boundary vertices
+      // fixed makes Butterfly interpolate the boundary polyline.
+      if (edge->isBoundary()) {
+        edge->newPosition = (a->position + b->position) / 2.0;
+        edge->isNew = false;
+        continue;
+      }
+
+      VertexIter c = h0->next()->next()->vertex(); // opposite vertex in face h0
+      VertexIter d = h1->next()->next()->vertex(); // opposite vertex in face h1
+
+      // The four outer "wing" vertices: the third vertices of the triangles
+      // sharing AC, AD, BC and BD with the two edge-adjacent triangles.
+      VertexIter wing0 = vertexAcrossEdge( h0->next()->next(), mesh ); // across AC
+      VertexIter wing1 = vertexAcrossEdge( h1->next(), mesh );         // across AD
+      VertexIter wing2 = vertexAcrossEdge( h0->next(), mesh );         // across BC
+      VertexIter wing3 = vertexAcrossEdge( h1->next()->next(), mesh ); // across BD
+
+      // Near a boundary some wings may not exist. Fall back to the boundary
+      // rule rather than using an incomplete stencil.
+      if (wing0 == mesh.verticesEnd() || wing1 == mesh.verticesEnd() ||
+          wing2 == mesh.verticesEnd() || wing3 == mesh.verticesEnd()) {
+        edge->newPosition = (a->position + b->position) / 2.0;
+      } else {
+        edge->newPosition =
+          (a->position + b->position) * w0 +
+          (c->position + d->position) * w1 +
+          (wing0->position + wing1->position + wing2->position + wing3->position) * w2;
+      }
+      edge->isNew = false;
+    }
+  }
+
+  void MeshResampler::butterfly( HalfedgeMesh& mesh,
+                                 const ButterflyWeightFunction& weights )
+  {
+    computeButterflyOriginalVertexPositions(mesh);
+    computeButterflyEdgePositions(mesh, weights);
+
+    // Same 4-1 topology as Loop: split all original edges, then flip the new
+    // edges that connect an old vertex to a new midpoint vertex.
+    splitAllEdges(mesh);
+    flipNewEdges(mesh);
+
+    for (VertexIter vertex = mesh.verticesBegin(); vertex != mesh.verticesEnd(); vertex++) {
+      vertex->position = vertex->newPosition;
     }
   }
 

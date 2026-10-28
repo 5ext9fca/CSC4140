@@ -238,6 +238,11 @@ namespace CGL {
         mesh_up_sample();
         break;
 
+      case 'b':
+      case 'B':
+        mesh_butterfly_sample();
+        break;
+
       case 'i':
       case 'I':
         showHUD = !showHUD;
@@ -970,6 +975,29 @@ namespace CGL {
     }
 
     resampler.upsample( *mesh );
+
+    // Since the mesh may have changed, the selected and
+    // hovered features may no longer point to valid elements.
+    selectedFeature.invalidate();
+    hoveredFeature.invalidate();
+  }
+
+  void MeshEdit::mesh_butterfly_sample()
+  {
+    HalfedgeMesh* mesh;
+
+    // If an element is selected, resample the mesh containing that
+    // element; otherwise, resample the first mesh in the scene.
+    if( selectedFeature.isValid() )
+    {
+      mesh = &( selectedFeature.node->mesh );
+    }
+    else
+    {
+      mesh = &( meshNodes.begin()->mesh );
+    }
+
+    resampler.butterfly( *mesh );
 
     // Since the mesh may have changed, the selected and
     // hovered features may no longer point to valid elements.
