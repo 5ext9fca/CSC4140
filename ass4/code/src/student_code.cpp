@@ -12,18 +12,6 @@ namespace CGL
     return (1.0-f)*a + f*b;
   }
 
-  ButterflyWeightFunction classicButterflyWeights()
-  {
-    return []( int ring ) -> double {
-      switch (ring) {
-        case 0: return 0.5;        // edge endpoints
-        case 1: return 1.0 / 8.0;  // vertices opposite the edge
-        case 2: return -1.0 / 16.0; // outer "wing" vertices
-        default: return 0.0;
-      }
-    };
-  }
-
   /**
    * Evaluates one step of the de Casteljau's algorithm using the given points and
    * the scalar parameter t (class member).
@@ -526,12 +514,12 @@ namespace CGL
     }
   }
 
-  void computeButterflyEdgePositions( HalfedgeMesh& mesh,
-                                      const ButterflyWeightFunction& weights )
+  void computeButterflyEdgePositions( HalfedgeMesh& mesh )
   {
-    const double w0 = weights(0);
-    const double w1 = weights(1);
-    const double w2 = weights(2);
+    // Classical Butterfly stencil weights.
+    const double w0 = 1.0 / 2.0;   // edge endpoints
+    const double w1 = 1.0 / 8.0;   // vertices opposite the edge
+    const double w2 = -1.0 / 16.0; // outer "wing" vertices
 
     for (EdgeIter edge = mesh.edgesBegin(); edge != mesh.edgesEnd(); edge++) {
       HalfedgeIter h0 = edge->halfedge();
@@ -573,11 +561,10 @@ namespace CGL
     }
   }
 
-  void MeshResampler::butterfly( HalfedgeMesh& mesh,
-                                 const ButterflyWeightFunction& weights )
+  void MeshResampler::butterfly( HalfedgeMesh& mesh )
   {
     computeButterflyOriginalVertexPositions(mesh);
-    computeButterflyEdgePositions(mesh, weights);
+    computeButterflyEdgePositions(mesh);
 
     // Same 4-1 topology as Loop: split all original edges, then flip the new
     // edges that connect an old vertex to a new midpoint vertex.
